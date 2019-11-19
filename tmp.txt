@@ -1,0 +1,232 @@
+Waf: Entering directory `/home/yu/ns-3-lbt/build'
+Waf: Leaving directory `/home/yu/ns-3-lbt/build'
+Build commands will be stored in build/compile_commands.json
+'build' finished successfully (1.736s)
+Running simulation for 1 sec of data transfer; 5 sec overall
+Operator A: LAA; number of cells 1; number of UEs 1
+Operator B: Wi-Fi; number of cells 1; number of UEs 1
+Total txop duration: 0 seconds.
+Total phy arrivals duration: 0 seconds.
+--------monitorA----------
+Flow 1 (1.0.0.2:49153 -> 7.0.0.2:9) proto UDP
+  Tx Packets: 3383
+  Tx Bytes:   3477724
+  TxOffered:  27.8218 Mbps
+  Rx Bytes:   8224
+  Throughput: 17.5104 Mbps
+  Mean delay:  3.38397 ms
+  Mean jitter:  0.0933327 ms
+  Rx Packets: 8
+--------monitorB----------
+Flow 1 (12.0.0.1:49153 -> 18.0.0.2:9) proto UDP
+  Tx Packets: 1953
+  Tx Bytes:   2007684
+  TxOffered:  16.0615 Mbps
+  Rx Bytes:   2007684
+  Throughput: 62.0907 Mbps
+  Mean delay:  14.7747 ms
+  Mean jitter:  0.101833 ms
+  Rx Packets: 1953
+Waf: Entering directory `/home/yu/ns-3-lbt/build'
+Waf: Leaving directory `/home/yu/ns-3-lbt/build'
+Build commands will be stored in build/compile_commands.json
+'build' finished successfully (1.683s)
+Running simulation for 1 sec of data transfer; 5 sec overall
+Operator A: LAA; number of cells 1; number of UEs 1
+Operator B: Wi-Fi; number of cells 1; number of UEs 1
+Total txop duration: 0 seconds.
+Total phy arrivals duration: 0 seconds.
+--------monitorA----------
+Flow 1 (1.0.0.2:49153 -> 7.0.0.2:9) proto UDP
+  Tx Packets: 3383
+  Tx Bytes:   3477724
+  TxOffered:  27.8218 Mbps
+  Rx Bytes:   3477724
+  Throughput: 33.052 Mbps
+  Mean delay:  258.845 ms
+  Mean jitter:  0.331011 ms
+  Rx Packets: 3383
+--------monitorB----------
+Flow 1 (12.0.0.1:49153 -> 18.0.0.2:9) proto UDP
+  Tx Packets: 1953
+  Tx Bytes:   2007684
+  TxOffered:  16.0615 Mbps
+  Rx Bytes:   1555364
+  Throughput: 43.8586 Mbps
+  Mean delay:  52.0015 ms
+  Mean jitter:  0.182269 ms
+  Rx Packets: 1513
+Waf: Entering directory `/home/yu/ns-3-lbt/build'
+Waf: Leaving directory `/home/yu/ns-3-lbt/build'
+Build commands will be stored in build/compile_commands.json
+'build' finished successfully (1.733s)
+Running simulation for 1 sec of data transfer; 5 sec overall
+Operator A: LAA; number of cells 1; number of UEs 1
+Operator B: Wi-Fi; number of cells 1; number of UEs 1
+Total txop duration: 0 seconds.
+Total phy arrivals duration: 0 seconds.
+--------monitorA----------
+Flow 1 (1.0.0.2:49153 -> 7.0.0.2:9) proto UDP
+  Tx Packets: 3383
+  Tx Bytes:   3477724
+  TxOffered:  27.8218 Mbps
+  Rx Bytes:   3477724
+  Throughput: 42.8187 Mbps
+  Mean delay:  149.731 ms
+  Mean jitter:  0.274257 ms
+  Rx Packets: 3383
+--------monitorB----------
+Flow 1 (12.0.0.1:49153 -> 18.0.0.2:9) proto UDP
+  Tx Packets: 1953
+  Tx Bytes:   2007684
+  TxOffered:  16.0615 Mbps
+  Rx Bytes:   1414528
+  Throughput: 35.8479 Mbps
+  Mean delay:  65.2607 ms
+  Mean jitter:  0.222849 ms
+  Rx Packets: 1376
+Waf: Entering directory `/home/yu/ns-3-lbt/build'
+Waf: Leaving directory `/home/yu/ns-3-lbt/build'
+Build commands will be stored in build/compile_commands.json
+'build' finished successfully (1.727s)
+Running simulation for 1 sec of data transfer; 5 sec overall
+Operator A: LAA; number of cells 1; number of UEs 1
+Operator B: Wi-Fi; number of cells 1; number of UEs 1
+Total txop duration: 0 seconds.
+Total phy arrivals duration: 0 seconds.
+--------monitorA----------
+Flow 1 (1.0.0.2:49153 -> 7.0.0.2:9) proto UDP
+  Tx Packets: 3383
+  Tx Bytes:   3477724
+  TxOffered:  27.8218 Mbps
+  Rx Bytes:   3477724
+  Throughput: 48.2383 Mbps
+  Mean delay:  106.606 ms
+  Mean jitter:  0.252679 ms
+  Rx Packets: 3383
+--------monitorB----------
+Flow 1 (12.0.0.1:49153 -> 18.0.0.2:9) proto UDP
+  Tx Packets: 1953
+  Tx Bytes:   2007684
+  TxOffered:  16.0615 Mbps
+  Rx Bytes:   1226404
+  Throughput: 29.8492 Mbps
+  Mean delay:  75.9659 ms
+  Mean jitter:  0.288363 ms
+  Rx Packets: 1193
+Waf: Entering directory `/home/yu/ns-3-lbt/build'
+Waf: Leaving directory `/home/yu/ns-3-lbt/build'
+Build commands will be stored in build/compile_commands.json
+'build' finished successfully (1.748s)
+Running simulation for 1 sec of data transfer; 5 sec overall
+Operator A: LAA; number of cells 1; number of UEs 1
+Operator B: Wi-Fi; number of cells 1; number of UEs 1
+Total txop duration: 0 seconds.
+Total phy arrivals duration: 0 seconds.
+--------monitorA----------
+Flow 1 (1.0.0.2:49153 -> 7.0.0.2:9) proto UDP
+  Tx Packets: 3383
+  Tx Bytes:   3477724
+  TxOffered:  27.8218 Mbps
+  Rx Bytes:   3477724
+  Throughput: 52.3205 Mbps
+  Mean delay:  78.9993 ms
+  Mean jitter:  0.239377 ms
+  Rx Packets: 3383
+--------monitorB----------
+Flow 1 (12.0.0.1:49153 -> 18.0.0.2:9) proto UDP
+  Tx Packets: 1953
+  Tx Bytes:   2007684
+  TxOffered:  16.0615 Mbps
+  Rx Bytes:   1038280
+  Throughput: 26.6282 Mbps
+  Mean delay:  91.502 ms
+  Mean jitter:  0.341355 ms
+  Rx Packets: 1010
+Waf: Entering directory `/home/yu/ns-3-lbt/build'
+Waf: Leaving directory `/home/yu/ns-3-lbt/build'
+Build commands will be stored in build/compile_commands.json
+'build' finished successfully (1.739s)
+Running simulation for 1 sec of data transfer; 5 sec overall
+Operator A: LAA; number of cells 1; number of UEs 1
+Operator B: Wi-Fi; number of cells 1; number of UEs 1
+Total txop duration: 0 seconds.
+Total phy arrivals duration: 0 seconds.
+--------monitorA----------
+Flow 1 (1.0.0.2:49153 -> 7.0.0.2:9) proto UDP
+  Tx Packets: 3383
+  Tx Bytes:   3477724
+  TxOffered:  27.8218 Mbps
+  Rx Bytes:   3477724
+  Throughput: 54.4716 Mbps
+  Mean delay:  65.5577 ms
+  Mean jitter:  0.233169 ms
+  Rx Packets: 3383
+--------monitorB----------
+Flow 1 (12.0.0.1:49153 -> 18.0.0.2:9) proto UDP
+  Tx Packets: 1953
+  Tx Bytes:   2007684
+  TxOffered:  16.0615 Mbps
+  Rx Bytes:   975572
+  Throughput: 23.4602 Mbps
+  Mean delay:  105.629 ms
+  Mean jitter:  0.390543 ms
+  Rx Packets: 949
+Waf: Entering directory `/home/yu/ns-3-lbt/build'
+Waf: Leaving directory `/home/yu/ns-3-lbt/build'
+Build commands will be stored in build/compile_commands.json
+'build' finished successfully (1.747s)
+Running simulation for 1 sec of data transfer; 5 sec overall
+Operator A: LAA; number of cells 1; number of UEs 1
+Operator B: Wi-Fi; number of cells 1; number of UEs 1
+Total txop duration: 0 seconds.
+Total phy arrivals duration: 0 seconds.
+--------monitorA----------
+Flow 1 (1.0.0.2:49153 -> 7.0.0.2:9) proto UDP
+  Tx Packets: 3383
+  Tx Bytes:   3477724
+  TxOffered:  27.8218 Mbps
+  Rx Bytes:   3477724
+  Throughput: 57.631 Mbps
+  Mean delay:  52.1894 ms
+  Mean jitter:  0.224893 ms
+  Rx Packets: 3383
+--------monitorB----------
+Flow 1 (12.0.0.1:49153 -> 18.0.0.2:9) proto UDP
+  Tx Packets: 1953
+  Tx Bytes:   2007684
+  TxOffered:  16.0615 Mbps
+  Rx Bytes:   912864
+  Throughput: 21.2922 Mbps
+  Mean delay:  125.646 ms
+  Mean jitter:  0.417869 ms
+  Rx Packets: 888
+Waf: Entering directory `/home/yu/ns-3-lbt/build'
+Waf: Leaving directory `/home/yu/ns-3-lbt/build'
+Build commands will be stored in build/compile_commands.json
+'build' finished successfully (1.728s)
+Running simulation for 1 sec of data transfer; 5 sec overall
+Operator A: LAA; number of cells 1; number of UEs 1
+Operator B: Wi-Fi; number of cells 1; number of UEs 1
+Total txop duration: 0 seconds.
+Total phy arrivals duration: 0 seconds.
+--------monitorA----------
+Flow 1 (1.0.0.2:49153 -> 7.0.0.2:9) proto UDP
+  Tx Packets: 3383
+  Tx Bytes:   3477724
+  TxOffered:  27.8218 Mbps
+  Rx Bytes:   3477724
+  Throughput: 60.252 Mbps
+  Mean delay:  44.7002 ms
+  Mean jitter:  0.218685 ms
+  Rx Packets: 3383
+--------monitorB----------
+Flow 1 (12.0.0.1:49153 -> 18.0.0.2:9) proto UDP
+  Tx Packets: 1953
+  Tx Bytes:   2007684
+  TxOffered:  16.0615 Mbps
+  Rx Bytes:   843988
+  Throughput: 20.5321 Mbps
+  Mean delay:  132.95 ms
+  Mean jitter:  0.439899 ms
+  Rx Packets: 821
