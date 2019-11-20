@@ -4,7 +4,7 @@
 *\.o
 *\.so
 /*log
-*\.pcap
+*\.pcap*
 /laa_wifi_simple_default_*
 /Dl*
 /Ul*
