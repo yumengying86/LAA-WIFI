@@ -207,7 +207,8 @@ static ns3::GlobalValue g_wifiMacQueueMaxDelay ("wifiQueueMaxDelay",
 
 static ns3::GlobalValue g_wifiMacQueueMaxSize ("wifiQueueMaxSize",
                                          "change from default 400 packets to change the queue size for Wifi packets",
-                                         ns3::UintegerValue (400),
+                                        //  ns3::UintegerValue (400),
+                                         ns3::UintegerValue (2000),
                                          ns3::MakeUintegerChecker<uint32_t> ());
 
 static ns3::GlobalValue g_mibPeriod ("mibPeriod",
@@ -2441,7 +2442,7 @@ ConfigureAndRunScenario (Config_e cellConfigA,
       udpInterval = Seconds ((interval * ueNodesA.GetN ()) / bsNodesA.GetN ());
     }
   NS_LOG_DEBUG ("UDP will use application interval " << udpInterval.GetSeconds () << " sec");
-
+  
   std::cout << "Running simulation for " << durationTime.GetSeconds () << " sec of data transfer; "
             << stopTime.GetSeconds () << " sec overall" << std::endl;
 
