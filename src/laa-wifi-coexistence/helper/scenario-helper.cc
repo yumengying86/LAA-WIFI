@@ -2426,7 +2426,7 @@ ConfigureAndRunScenario (Config_e cellConfigA,
   GlobalValue::GetValueByName ("udpPacketSize", uintegerValue);
   uint64_t bitRate = dataRateValue.Get().GetBitRate ();
   uint32_t packetSize = uintegerValue.Get (); // bytes
-  double interval = static_cast<double> (packetSize * 8) / bitRate;
+  double interval = static_cast<double> (packetSize * 8) / (bitRate*10000);
   Time udpInterval;
   // if bitRate < UDP_SATURATION_RATE, use the calculated interval 
   // if bitRate >= UDP_SATURATION_RATE, and the spreadUdpLoad optimization is

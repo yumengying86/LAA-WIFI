@@ -1,8 +1,10 @@
-build/*
+/build/
+/test*
 *\.pyc
 *\.o
 *\.so
-*log
-./laa_wifi_simple_default_*
-Dl*
-Ul*
+/*log
+*\.pcap*
+/laa_wifi_simple_default_*
+/Dl*
+/Ul*
