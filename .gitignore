@@ -3,6 +3,6 @@ build/*
 *\.o
 *\.so
 *log
-./laa_wifi_simple_default_*
+laa_wifi_simple_default_*
 Dl*
 Ul*
