@@ -208,7 +208,7 @@ static ns3::GlobalValue g_wifiMacQueueMaxDelay ("wifiQueueMaxDelay",
 static ns3::GlobalValue g_wifiMacQueueMaxSize ("wifiQueueMaxSize",
                                          "change from default 400 packets to change the queue size for Wifi packets",
                                         //  ns3::UintegerValue (400),
-                                         ns3::UintegerValue (2000),
+                                         ns3::UintegerValue (4000),
                                          ns3::MakeUintegerChecker<uint32_t> ());
 
 static ns3::GlobalValue g_mibPeriod ("mibPeriod",
@@ -2426,7 +2426,7 @@ ConfigureAndRunScenario (Config_e cellConfigA,
   GlobalValue::GetValueByName ("udpPacketSize", uintegerValue);
   uint64_t bitRate = dataRateValue.Get().GetBitRate ();
   uint32_t packetSize = uintegerValue.Get (); // bytes
-  double interval = static_cast<double> (packetSize * 8) / (bitRate*10000);
+double interval = static_cast<double> (packetSize * 8) / (bitRate*250000);
   Time udpInterval;
   // if bitRate < UDP_SATURATION_RATE, use the calculated interval 
   // if bitRate >= UDP_SATURATION_RATE, and the spreadUdpLoad optimization is
