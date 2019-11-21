@@ -62,6 +62,16 @@ static int64_t streamIndex = 1000;
 // values may be managed in the ns-3 ConfigStore system.
 //
 
+
+static ns3::GlobalValue g_shutA("shutA",
+                                "shut down A ?",
+                                ns3::BooleanValue (false),
+                                ns3::MakeBooleanChecker ());
+static ns3::GlobalValue g_shutB("shutB",
+                                "shut down B ?",
+                                ns3::BooleanValue (false),
+                                ns3::MakeBooleanChecker ());
+
 static ns3::GlobalValue g_serverStartTimeSeconds ("serverStartTimeSeconds",
                                                   "Server start time (seconds)",
                                                   ns3::DoubleValue (2),
@@ -2426,7 +2436,7 @@ ConfigureAndRunScenario (Config_e cellConfigA,
   GlobalValue::GetValueByName ("udpPacketSize", uintegerValue);
   uint64_t bitRate = dataRateValue.Get().GetBitRate ();
   uint32_t packetSize = uintegerValue.Get (); // bytes
-double interval = static_cast<double> (packetSize * 8) / (bitRate*250000);
+  double interval = static_cast<double> (packetSize * 8) / (bitRate*250000);
   Time udpInterval;
   // if bitRate < UDP_SATURATION_RATE, use the calculated interval 
   // if bitRate >= UDP_SATURATION_RATE, and the spreadUdpLoad optimization is
@@ -2862,13 +2872,22 @@ double interval = static_cast<double> (packetSize * 8) / (bitRate*250000);
             }
         }
 
+      BooleanValue isShut;
+      GlobalValue::GetValueByName("shutA",isShut);
+      bool shutA=isShut.Get();
+      GlobalValue::GetValueByName("shutB",isShut);
+      bool shutB=isShut.Get();
+      std::cout<<"shutA?  "<<shutA<<std::endl;
+      std::cout<<"shutB?  "<<shutB<<std::endl;
       if (transport == UDP)
         {
           ApplicationContainer serverApps, clientApps;
           serverApps.Add (ConfigureUdpServers (ueNodesA, serverStartTime, serverStopTime));
-          clientApps.Add (ConfigureUdpClients (clientNodesA, ipUeA, clientStartTime, clientStopTime, udpInterval));
+          if(!shutA)clientApps.Add (ConfigureUdpClients (clientNodesA, ipUeA, clientStartTime, clientStopTime, udpInterval));
+          else clientApps.Add (ConfigureUdpClients (clientNodesA, ipUeA, Time(Seconds(1000000)), Time(Seconds(1000000.00001)), udpInterval));
           serverApps.Add (ConfigureUdpServers (nonVoiceUeNodesB, serverStartTime, serverStopTime));
-          clientApps.Add (ConfigureUdpClients (clientNodesB, nonVoiceIpUeB, clientStartTime, clientStopTime, udpInterval));
+          if(!shutB)clientApps.Add (ConfigureUdpClients (clientNodesB, nonVoiceIpUeB, clientStartTime, clientStopTime, udpInterval));
+          else clientApps.Add (ConfigureUdpClients (clientNodesB, nonVoiceIpUeB,  Time(Seconds(1000000)), Time(Seconds(1000000.00001)), udpInterval));
         }
       else if (transport == FTP)
         {
