@@ -431,8 +431,11 @@ WifiPhy::GetPayloadDuration (uint32_t size, WifiTxVector txVector, WifiPreamble 
 
         //(Section 18.3.2.3 "Modulation-dependent parameters" Table 18-4 "Modulation-dependent parameters"; IEEE Std 802.11-2012)
         //corresponds to N_{DBPS} in the table
-        double numDataBitsPerSymbol = payloadMode.GetDataRate (txVector.GetChannelWidth (), 0, 1) * symbolDuration.GetNanoSeconds () / 1e9;
-        std::cout<<"datarate = "<<payloadMode.GetDataRate (txVector.GetChannelWidth (), 0, 1)<<std::endl;
+        double datarate=payloadMode.GetDataRate (txVector.GetChannelWidth (), 0, 1);
+        double symboldur=symbolDuration.GetNanoSeconds () / 1e9;
+        //double numDataBitsPerSymbol = payloadMode.GetDataRate (txVector.GetChannelWidth (), 0, 1) * symbolDuration.GetNanoSeconds () / 1e9;
+        double numDataBitsPerSymbol = datarate * symboldur;
+
         double numSymbols;
 
         if (mpdutype == MPDU_IN_AGGREGATE && preamble != WIFI_PREAMBLE_NONE)
