@@ -2,9 +2,9 @@
 # import re
 # 读取文件里面每一行
 with open('res.csv', 'w') as fout:
-    with open('tmp.txt', 'r') as fin:
+    with open('terminal.txt', 'r') as fin:
         while fin.readline():
-            for i in range(10):
+            for i in range(13):
                 line = fin.readline()
             for i in range(8):
                 line = fin.readline()

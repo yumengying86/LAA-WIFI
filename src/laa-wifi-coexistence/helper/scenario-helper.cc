@@ -703,6 +703,7 @@ SignalCb (std::string context, bool wifi, uint32_t senderNodeId, double rxPowerD
   arr.m_wifi = wifi;
   arr.m_power = rxPowerDbm;
   g_arrivals.push_back (arr);
+
   UintegerValue uintegerValue;
   GlobalValue::GetValueByName ("logPhyNodeId", uintegerValue);
   if ((uintegerValue.Get () == UINT32_MAX || uintegerValue.Get () == arr.m_nodeId) && !wifi)
@@ -2033,9 +2034,11 @@ ConfigureWifiAp (NodeContainer bsNodes, struct PhyParams phyParams, Ptr<Spectrum
   spectrumPhy.Set ("Transmitters", UintegerValue (2));
   spectrumPhy.SetPcapDataLinkType (SpectrumWifiPhyHelper::DLT_IEEE802_11_RADIO);
 
-  WifiHelper wifi;
+  WifiHelper wifi; 
   wifi.SetRemoteStationManager ("ns3::IdealWifiManager");
   wifi.SetStandard (WIFI_PHY_STANDARD_80211n_5GHZ);
+  wifi.SetRemoteStationManager ("ns3::ConstantRateWifiManager",
+                                "DataMode", StringValue ("OfdmRate24Mbps"));
   WifiMacHelper mac;
 
   spectrumPhy.Set ("ShortGuardEnabled", BooleanValue (false));
@@ -2095,6 +2098,8 @@ ConfigureWifiSta (NodeContainer ueNodes, struct PhyParams phyParams, Ptr<Spectru
   WifiHelper wifi;
   wifi.SetRemoteStationManager ("ns3::IdealWifiManager");
   wifi.SetStandard (WIFI_PHY_STANDARD_80211n_5GHZ);
+  wifi.SetRemoteStationManager ("ns3::ConstantRateWifiManager",
+                                "DataMode", StringValue ("OfdmRate24Mbps"));
   WifiMacHelper mac;
 
   spectrumPhy.Set ("ShortGuardEnabled", BooleanValue (false));
@@ -2436,7 +2441,9 @@ ConfigureAndRunScenario (Config_e cellConfigA,
   GlobalValue::GetValueByName ("udpPacketSize", uintegerValue);
   uint64_t bitRate = dataRateValue.Get().GetBitRate ();
   uint32_t packetSize = uintegerValue.Get (); // bytes
-  double interval = static_cast<double> (packetSize * 8) / (bitRate*250000);
+  double interval = static_cast<double> (packetSize * 8) / bitRate;
+  // double interval = static_cast<double> (0.000001);
+ 
   Time udpInterval;
   // if bitRate < UDP_SATURATION_RATE, use the calculated interval 
   // if bitRate >= UDP_SATURATION_RATE, and the spreadUdpLoad optimization is
@@ -2452,7 +2459,7 @@ ConfigureAndRunScenario (Config_e cellConfigA,
       udpInterval = Seconds ((interval * ueNodesA.GetN ()) / bsNodesA.GetN ());
     }
   NS_LOG_DEBUG ("UDP will use application interval " << udpInterval.GetSeconds () << " sec");
-  
+
   std::cout << "Running simulation for " << durationTime.GetSeconds () << " sec of data transfer; "
             << stopTime.GetSeconds () << " sec overall" << std::endl;
 
@@ -2469,6 +2476,7 @@ ConfigureAndRunScenario (Config_e cellConfigA,
   clientNodesA.Create (1); // create one remote host for sourcing traffic
   NodeContainer clientNodesB;  // for the backhaul application client
   clientNodesB.Create (1); // create one remote host for sourcing traffic
+
   // For Wi-Fi, the client node needs to be connected to the bsNodes via a single
   // CSMA link
   //
@@ -2570,6 +2578,7 @@ ConfigureAndRunScenario (Config_e cellConfigA,
 
 
   // Laa node configuration and installation.
+
   if (laaNodeEnabled)
     {
       Vector3DValue vectorValue;

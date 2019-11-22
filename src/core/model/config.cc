@@ -660,6 +660,7 @@ void
 ConfigImpl::Connect (std::string path, const CallbackBase &cb)
 {
   NS_LOG_FUNCTION (this << path << &cb);
+
   std::string root, leaf;
   ParsePath (path, &root, &leaf);
   Config::MatchContainer container = LookupMatches (root);

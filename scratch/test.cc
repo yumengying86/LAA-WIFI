@@ -102,7 +102,6 @@ static ns3::GlobalValue g_channelAccessManager ("ChannelAccessManager",
 static ns3::GlobalValue g_lbtTxop ("lbtTxop",
                                    "TxOp for LBT devices (ms)",
                                    ns3::DoubleValue (8.0),
-                                  //  ns3::MakeDoubleChecker<double> (4.0, 20.0)); yumengying
                                    ns3::MakeDoubleChecker<double> (0.0, 20.0));
 
 static ns3::GlobalValue g_useReservationSignal ("useReservationSignal",

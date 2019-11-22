@@ -476,6 +476,7 @@ WifiPhy::GetPayloadDuration (uint32_t size, WifiTxVector txVector, WifiPreamble 
           {
             NS_FATAL_ERROR ("Wrong combination of preamble and packet type");
           }
+
         //Add signal extension for ERP PHY
         if (payloadMode.GetModulationClass () == WIFI_MOD_CLASS_ERP_OFDM)
           {

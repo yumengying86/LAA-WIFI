@@ -1223,6 +1223,7 @@ LteEnbPhy::SendDataChannels (Ptr<PacketBurst> pb)
   std::list<Ptr<LteControlMessage> > ctrlMsgList;
   ctrlMsgList.clear ();
   m_downlinkSpectrumPhy->StartTxDataFrame (pb, ctrlMsgList, DL_DATA_DURATION);
+
   m_data(pb->GetSize());
 }
 
