@@ -1,15 +1,14 @@
 #! /bin/bash
-# rm laa_wifi_simple_default_phy_log laa_wifi_simple_default_* Dl* Ul*
-./waf --run "scratch/test --lbtTxop=1 --logPhyArrivals=true"
+# rm laa_wifi_simple_default_* Dl* Ul*
+# --shutA=true --udpRate=30000000 --udpPacketSize=9000 --shutB=true   --lbtTxop=1
 
-
-# --shutA=true --udpRate=30000000 --udpPacketSize=9000 --shutB=true --lbtTxop=3
-
+./waf --run "scratch/test --udpPacketSize=4500 --lbtTxop=1 --logPhyArrivals=true" 
 # int=1
 # while(( $int<=8 ))
 # do
-#     ./waf --run "scratch/test --lbtTxop=$int --logPhyArrivals=true --logTxops=true"  
-#     mv laa_wifi_simple_default_txop_log txop${int}
+#     # size=`expr $int \* 1500`
+#     ./waf --run "scratch/test --udpPacketSize=4500 --lbtTxop=${int} --logPhyArrivals=true"  
+#     rm laa_wifi_simple_default_* Dl* Ul*
 #     let "int++"
 # done
 

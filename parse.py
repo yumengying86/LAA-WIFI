@@ -1,17 +1,34 @@
 #!/usr/bin/python3
-# import re
-# 读取文件里面每一行
+import sys
+import re
+
 with open('res.csv', 'w') as fout:
-    with open('terminal.txt', 'r') as fin:
-        while fin.readline():
-            for i in range(13):
+    with open(sys.argv[1], 'r') as fin:
+        line = fin.readline()
+        while line:
+            if re.match('--------monitorA----------', line):
                 line = fin.readline()
-            for i in range(8):
+                if re.match('^Flow', line):
+                    for i in range(8):
+                        line = fin.readline()
+                        fout.write(re.search("\d+(.\d+)?", line).group() + ',')
+                    line = fin.readline()
+                else:
+                    fout.write(',,,,,,,,')
+                    continue
+            elif re.match('--------monitorB----------', line):
                 line = fin.readline()
-                fout.write((((line.split(':'))[1].strip()).split(' '))[0] + ',') 
-            for i in range(2):
+                if not line:
+                    break
+                elif re.match('^Flow', line):
+                    for i in range(8):
+                        line = fin.readline()
+                        fout.write(re.search("\d+(.\d+)?", line).group() + ',')
+                    fout.write('\n')
+                    line = fin.readline()
+                else:
+                    fout.write(',,,,,,,,\n')
+                    line = fin.readline()
+            else:
                 line = fin.readline()
-            for i in range(8):
-                line = fin.readline()
-                fout.write((((line.split(':'))[1].strip()).split(' '))[0] + ',') 
-            fout.write('\n')
+                

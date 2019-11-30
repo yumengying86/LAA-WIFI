@@ -967,7 +967,7 @@ SpectrumWifiPhy::SendPacket (Ptr<const Packet> packet, WifiTxVector txVector, Wi
       NotifyTxDrop (packet);
       return;
     }
-
+  // std::cout << "wifi packet size: " << packet->GetSize () << std::endl;
   Time txDuration = CalculateTxDuration (packet->GetSize (), txVector, preamble, GetFrequency (), mpdutype, 1);
   NS_ASSERT (txDuration > NanoSeconds (0));
 
