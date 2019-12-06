@@ -61,6 +61,17 @@ static int64_t streamIndex = 1000;
 // Global Values are used in place of command line arguments so that these
 // values may be managed in the ns-3 ConfigStore system.
 //
+
+
+static ns3::GlobalValue g_shutA("shutA",
+                                "shut down A ?",
+                                ns3::BooleanValue (false),
+                                ns3::MakeBooleanChecker ());
+static ns3::GlobalValue g_shutB("shutB",
+                                "shut down B ?",
+                                ns3::BooleanValue (false),
+                                ns3::MakeBooleanChecker ());
+
 static ns3::GlobalValue g_serverStartTimeSeconds ("serverStartTimeSeconds",
                                                   "Server start time (seconds)",
                                                   ns3::DoubleValue (2),
@@ -206,7 +217,7 @@ static ns3::GlobalValue g_wifiMacQueueMaxDelay ("wifiQueueMaxDelay",
 
 static ns3::GlobalValue g_wifiMacQueueMaxSize ("wifiQueueMaxSize",
                                          "change from default 400 packets to change the queue size for Wifi packets",
-                                         ns3::UintegerValue (400),
+                                         ns3::UintegerValue (40000000),
                                          ns3::MakeUintegerChecker<uint32_t> ());
 
 static ns3::GlobalValue g_mibPeriod ("mibPeriod",
@@ -691,6 +702,7 @@ SignalCb (std::string context, bool wifi, uint32_t senderNodeId, double rxPowerD
   arr.m_wifi = wifi;
   arr.m_power = rxPowerDbm;
   g_arrivals.push_back (arr);
+
   UintegerValue uintegerValue;
   GlobalValue::GetValueByName ("logPhyNodeId", uintegerValue);
   if ((uintegerValue.Get () == UINT32_MAX || uintegerValue.Get () == arr.m_nodeId) && !wifi)
@@ -1870,7 +1882,7 @@ ConfigureLaa (Ptr<LteHelper> lteHelper, Ptr<PointToPointEpcHelper> epcHelper, Ip
               std::vector<LteSpectrumValueCatcher>& lteDlSinrCatcherVector, std::bitset<40> absPattern, Transport_e transport, Time lbtChannelAccessManagerInstallTime)
 {
 
-  Config::SetDefault ("ns3::LteRlcUm::MaxTxBufferSize", UintegerValue (2000000));
+  Config::SetDefault ("ns3::LteRlcUm::MaxTxBufferSize", UintegerValue (0xffffffff));
 
   // For LTE, the client node needs to be connected only to the PGW/SGW node
   // The EpcHelper will then take care of connecting the PGW/SGW node to the eNBs
@@ -1883,7 +1895,7 @@ ConfigureLaa (Ptr<LteHelper> lteHelper, Ptr<PointToPointEpcHelper> epcHelper, Ip
       clientNode = clientNodes.Get (0);
       Ptr<Node> pgw = epcHelper->GetPgwNode ();
       PointToPointHelper p2ph;
-      p2ph.SetDeviceAttribute ("DataRate", DataRateValue (DataRate ("100Gb/s"))); 
+      p2ph.SetDeviceAttribute ("DataRate", DataRateValue (DataRate ("100Gb/s")));
       p2ph.SetDeviceAttribute ("Mtu", UintegerValue (1500));
       p2ph.SetChannelAttribute ("Delay", TimeValue (Seconds (0.0)));
       NetDeviceContainer internetDevices = p2ph.Install (pgw, clientNode);
@@ -1904,7 +1916,7 @@ ConfigureLaa (Ptr<LteHelper> lteHelper, Ptr<PointToPointEpcHelper> epcHelper, Ip
   lteHelper->SetSchedulerAttribute ("UlCqiFilter", EnumValue (FfMacScheduler::PUSCH_UL_CQI));
   // LTE-U DL transmission @5180 MHz
   lteHelper->SetEnbDeviceAttribute ("DlEarfcn", UintegerValue (255444));
-  lteHelper->SetEnbDeviceAttribute ("DlBandwidth", UintegerValue (100));
+  lteHelper->SetEnbDeviceAttribute ("DlBandwidth", UintegerValue (20));             
   // needed for initial cell search
   lteHelper->SetUeDeviceAttribute ("DlEarfcn", UintegerValue (255444));
   // LTE calibration
@@ -2024,6 +2036,8 @@ ConfigureWifiAp (NodeContainer bsNodes, struct PhyParams phyParams, Ptr<Spectrum
   WifiHelper wifi;
   wifi.SetRemoteStationManager ("ns3::IdealWifiManager");
   wifi.SetStandard (WIFI_PHY_STANDARD_80211n_5GHZ);
+  wifi.SetRemoteStationManager ("ns3::ConstantRateWifiManager",
+                                "DataMode", StringValue ("OfdmRate12Mbps"));
   WifiMacHelper mac;
 
   spectrumPhy.Set ("ShortGuardEnabled", BooleanValue (false));
@@ -2083,6 +2097,8 @@ ConfigureWifiSta (NodeContainer ueNodes, struct PhyParams phyParams, Ptr<Spectru
   WifiHelper wifi;
   wifi.SetRemoteStationManager ("ns3::IdealWifiManager");
   wifi.SetStandard (WIFI_PHY_STANDARD_80211n_5GHZ);
+  wifi.SetRemoteStationManager ("ns3::ConstantRateWifiManager",
+                                "DataMode", StringValue ("OfdmRate12Mbps")); 
   WifiMacHelper mac;
 
   spectrumPhy.Set ("ShortGuardEnabled", BooleanValue (false));
@@ -2389,7 +2405,7 @@ ConfigureAndRunScenario (Config_e cellConfigA,
   // For FTP model 1, we want to dump a lot of packets into the device,
   // but the CSMA or point-to-point drop-tail queue default size of 100 packets
   // will be too constraining, so relax this.
-  Config::SetDefault ("ns3::Queue::MaxPackets", UintegerValue (10000));
+  Config::SetDefault ("ns3::Queue::MaxPackets", UintegerValue (10000)); 
 
   bool laaNodeEnabled = false;
   // this variable is not used in all scenarios thus might not be defined
@@ -2423,8 +2439,10 @@ ConfigureAndRunScenario (Config_e cellConfigA,
   UintegerValue uintegerValue;
   GlobalValue::GetValueByName ("udpPacketSize", uintegerValue);
   uint64_t bitRate = dataRateValue.Get().GetBitRate ();
-  uint32_t packetSize = uintegerValue.Get (); // bytes
-  double interval = static_cast<double> (packetSize * 8) / bitRate;
+  // uint32_t packetSize = uintegerValue.Get (); // bytes
+  // double interval = static_cast<double> (packetSize * 8) / bitRate;
+  double interval = static_cast<double> (0.000001);
+ 
   Time udpInterval;
   // if bitRate < UDP_SATURATION_RATE, use the calculated interval 
   // if bitRate >= UDP_SATURATION_RATE, and the spreadUdpLoad optimization is
@@ -2457,6 +2475,7 @@ ConfigureAndRunScenario (Config_e cellConfigA,
   clientNodesA.Create (1); // create one remote host for sourcing traffic
   NodeContainer clientNodesB;  // for the backhaul application client
   clientNodesB.Create (1); // create one remote host for sourcing traffic
+
   // For Wi-Fi, the client node needs to be connected to the bsNodes via a single
   // CSMA link
   //
@@ -2558,6 +2577,7 @@ ConfigureAndRunScenario (Config_e cellConfigA,
 
 
   // Laa node configuration and installation.
+
   if (laaNodeEnabled)
     {
       Vector3DValue vectorValue;
@@ -2860,13 +2880,22 @@ ConfigureAndRunScenario (Config_e cellConfigA,
             }
         }
 
+      BooleanValue isShut;
+      GlobalValue::GetValueByName("shutA",isShut);
+      bool shutA=isShut.Get();
+      GlobalValue::GetValueByName("shutB",isShut);
+      bool shutB=isShut.Get();
+      std::cout<<"shutA?  "<<shutA<<std::endl;
+      std::cout<<"shutB?  "<<shutB<<std::endl;
       if (transport == UDP)
         {
           ApplicationContainer serverApps, clientApps;
           serverApps.Add (ConfigureUdpServers (ueNodesA, serverStartTime, serverStopTime));
-          clientApps.Add (ConfigureUdpClients (clientNodesA, ipUeA, clientStartTime, clientStopTime, udpInterval));
+          if(!shutA)clientApps.Add (ConfigureUdpClients (clientNodesA, ipUeA, clientStartTime, clientStopTime, udpInterval));
+          else clientApps.Add (ConfigureUdpClients (clientNodesA, ipUeA, Time(Seconds(1000000)), Time(Seconds(1000000.00001)), udpInterval));
           serverApps.Add (ConfigureUdpServers (nonVoiceUeNodesB, serverStartTime, serverStopTime));
-          clientApps.Add (ConfigureUdpClients (clientNodesB, nonVoiceIpUeB, clientStartTime, clientStopTime, udpInterval));
+          if(!shutB)clientApps.Add (ConfigureUdpClients (clientNodesB, nonVoiceIpUeB, clientStartTime, clientStopTime, udpInterval));
+          else clientApps.Add (ConfigureUdpClients (clientNodesB, nonVoiceIpUeB,  Time(Seconds(1000000)), Time(Seconds(1000000.00001)), udpInterval));
         }
       else if (transport == FTP)
         {
@@ -3115,7 +3144,7 @@ ConfigureAndRunScenario (Config_e cellConfigA,
       //Simulator::Schedule (clientStopTime,  &ScheduleCtrlSignalLogDisconnect);
     }
 
-  // lteHelper->EnableDlMacTraces();
+  //lteHelper->EnableDlMacTraces();
 
   //
   // Running the simulation

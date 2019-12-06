@@ -1,223 +1,3 @@
-/* -*-  Mode: C++; c-file-style: "gnu"; indent-tabs-mode:nil; -*- */
-/*
- * Copyright (c) 2015 Centre Tecnologic de Telecomunicacions de Catalunya (CTTC)
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License version 2 as
- * published by the Free Software Foundation;
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- *
- * Author: Nicola Baldo <nbaldo@cttc.es>
- */
-
-//
-//  This example program can be used to experiment with wireless coexistence
-//  in a simple scenario.  The scenario consists of two cells whose radio
-//  coverage overlaps but representing, notionally, two operators in the
-//  same region whose transmissions may impact mechanisms such as clear
-//  channel assessment and adaptive modulation and coding.
-//  The technologies used are LTE Licensed Assisted Access (LAA)
-//  operating on EARFCN 255444 (5.180 GHz), and Wi-Fi 802.11n
-//  operating on channel 36 (5.180 GHz).    
-//
-//  The notional scenario consists of two operators A and B, each
-//  operating a single cell, and each cell consisting of a base
-//  station (BS) and a user equipment (UE), as represented in the following 
-//  diagram:
-//
-// 
-//    BS A  . .  d2 . .  UE B 
-//     |                   |
-//  d1 |                d1 |
-//     |                   |
-//    UE A  . .  d2 . .  BS B
-//  
-//  cell A              cell B
-//
-//  where 'd1' and 'd2' distances (in meters) separate the nodes.
-//
-//  When using LTE, the BS is modeled as an eNB and the UE as a UE.
-//  When using Wi-Fi, the BS is modeled as an AP and the UE as a STA.
-//
-//  In addition, both BS are connected to a "backhaul" client node that
-//  originates data transfer in the downlink direction from client to UE(s).
-//  The links from client to BS are modeled as well provisioned; low latency
-//  links.
-//
-//  The figure may be redrawn as follows:
-//
-//     +---------------------------- client
-//     |                               |
-//    BS A  . .  d2 . .  UE B          |
-//     |                   |           |
-//  d1 |                d1 |           |
-//     |                   |           |
-//    UE A  . .  d2 . .  BS B----------+
-//  
-//
-//  In general, the program can be configured at run-time by passing
-//  command-line arguments.  The command
-//  ./waf --run "laa-wifi-simple --help"
-//  will display all of the available run-time help options, and in
-//  particular, the command
-//  ./waf --run "laa-wifi-simple --PrintGlobals" should
-//  display the following:
-//
-// Global values:
-//    --ChannelAccessManager=[Lbt]
-//        Default, DutyCycle, Lbt
-//    --ChecksumEnabled=[false]
-//        A global switch to enable all checksums for all protocols
-//    --RngRun=[1]
-//        The run number used to modify the global seed
-//    --RngSeed=[1]
-//        The global seed of all rng streams
-//    --SchedulerType=[ns3::MapScheduler]
-//        The object class to use as the scheduler implementation
-//    --SimulatorImplementationType=[ns3::DefaultSimulatorImpl]
-//        The object class to use as the simulator implementation
-//    --asciiEnabled=[false]
-//        Whether to enable ascii trace files for Wi-Fi
-//    --cellConfigA=[Laa]
-//        Laa, Lte, or Wifi
-//    --cellConfigB=[Wifi]
-//        Laa, Lte, or Wifi
-//    --clientStartTimeSeconds=[2]
-//        Client start time (seconds)
-//    --cwUpdateRule=[nacks80]
-//        Rule that will be used to update contention window of LAA node
-//    --d1=[10]
-//        intra-cell separation (e.g. AP to STA)
-//    --d2=[50]
-//        inter-cell separation
-//    --disableMibAndSibStartupTime=[2]
-//        the time at which to disable mib and sib control messages (seconds)
-//    --dropPackets=[false]
-//        applicable to impl2; if true, Phy will drop packets upon failure to obtain channel access
-//    --drsEnabled=[true]
-//        if true, drs ctrl messages will be generatedif false, drs ctrl messages will not be generated
-//    --drsPeriod=[80]
-//        periodicity to be set for DRS ctrl messages
-//    --duration=[1]
-//        Data transfer duration (seconds)
-//    --ftpLambda=[0.5]
-//        Lambda value for FTP model 1 application
-//    --generateRem=[false]
-//        if true, will generate a REM and then abort the simulation;if false, will run the simulation normally (without generating any REM)
-//    --laaEdThreshold=[-72]
-//        CCA-ED threshold for channel access manager (dBm)
-//    --lbtChannelAccessManagerInstallTime=[2]
-//        LTE channel access manager install time (seconds)
-//    --lbtTxop=[8]
-//        TxOp for LBT devices (ms)
-//    --logBackoffChanges=[false]
-//        Whether to write logfile of backoff values drawn
-//    --logBackoffNodeId=[4294967295]
-//        Node index of specific node to filter logBackoffChanges (default will log all nodes)
-//    --logBeaconArrivals=[false]
-//        Whether to write logfile of beacon arrivals to STA devices
-//    --logBeaconNodeId=[4294967295]
-//        Node index of specific node to filter logBeaconArrivals (default will log all nodes)
-//    --logCwChanges=[false]
-//        Whether to write logfile of contention window changes
-//    --logCwNodeId=[4294967295]
-//        Node index of specific node to filter logCwChanges (default will log all nodes)
-//    --logDataTx=[false]
-//        Whether to write logfile when data is transmitted at eNb
-//    --logHarqFeedback=[false]
-//        Whether to write logfile of HARQ feedbacks per each subframe.
-//    --logHarqFeedbackNodeId=[4294967295]
-//        Node index of specific node to filter HARQ feedbacks (default will log all nodes)
-//    --logPhyArrivals=[false]
-//        Whether to write logfile of signal arrivals to SpectrumWifiPhy
-//    --logPhyNodeId=[4294967295]
-//        Node index of specific node to filter logPhyArrivals (default will log all nodes)
-//    --logTxopNodeId=[4294967295]
-//        Node index of specific node to filter logTxops (default will log all nodes)
-//    --logTxops=[false]
-//        Whether to write logfile of txop opportunities of eNb
-//    --logWifiFailRetries=[false]
-//        Log when a data packet fails to be retransmitted successfully and is discarded
-//    --logWifiRetries=[false]
-//        Log when a data packet requires a retry
-//    --lteChannelAccessImpl=[false]
-//        if true, (impl1) it will be used lte channel access implemenation that stops scheduler when no channel access, thus has 2ms delayif false, (impl2) it will be used lte channel acces implementation that does not stop scheduler, always schedules, transmits only when there is channel access, can be used in combination with drop packet attribute
-//    --lteDutyCycle=[1]
-//        Duty cycle value to be used for LTE
-//    --mibPeriod=[10]
-//        periodicity to be set for MIB ctrl messages
-//    --outputDir=[./]
-//        directory where to store simulation results
-//    --pcapEnabled=[false]
-//        Whether to enable pcap trace files for Wi-Fi
-//    --remDir=[./]
-//        directory where to save REM-related output files
-//    --rlcAmRbsTimer=[20]
-//        Set value of ReportBufferStatusTimer attribute of RlcAm.
-//    --serverLingerTimeSeconds=[1]
-//        Server linger time (seconds)
-//    --serverStartTimeSeconds=[2]
-//        Server start time (seconds)
-//    --sibPeriod=[20]
-//        periodicity to be set for SIB1 ctrl messages
-//    --simTag=[default]
-//        tag to be appended to output filenames to distinguish simulation campaigns
-//    --simulationLingerTimeSeconds=[1]
-//        Simulation linger time (seconds)
-//    --spreadUdpLoad=[false]
-//        optimization to try to spread a saturating UDP load across multiple UE and cells
-//    --tcpRlcMode=[RlcAm]
-//        RLC_AM, RLC_UM
-//    --transport=[Udp]
-//        whether to use 3GPP Ftp, Udp, or Tcp
-//    --udpPacketSize=[1000]
-//        Packet size of UDP application
-//    --udpRate=[75000000bps]
-//        Data rate of UDP application
-//    --useReservationSignal=[true]
-//        Defines whether reservation signal will be used when used channel access manager at LTE eNb
-//    --voiceEnabled=[false]
-//        Whether to enable voice
-//    --wifiQueueMaxDelay=[500]
-//        change from default 500 ms to change the maximum queue dwell time for Wifi packets
-//    --wifiQueueMaxSize=[400]
-//        change from default 400 packets to change the queue size for Wifi packets
-//  Most of the above are specific to the LAA module.  In particular,
-//  passing the argument '--cellConfigA=Wifi' will cause both
-//  cells to use Wifi on the same channel but on a different SSID, 
-//  while the (default) will cause cell A to use Laa and cellB to use Wi-Fi.  
-//  Passing an argument  of '--cellConfigB=Laa" will cause both cells to 
-//  use LAA.
-//
-//  By default, the simulation is configured to use a constant-bit-rate
-//  UDP flow in each operator network, defaulting to 75 Mb/s.
-//
-//  We refer to the left-most cell as 'cell A' and the right-most
-//  cell as 'cell B'.  Both cells are configured to run UDP transfers from
-//  client to BS.  The application data rate is 75 Mb/s, which does not
-//  saturate either link since 2x2 MIMO is the default.  Usually for 
-//  coexistence studies, the "Ftp" or "Tcp" transport type is selected.
-//
-//  It is outside of the scope of this header to try to document everything
-//  about this program; see the model library documentation.
-//
-//  The following sample output is provided.
-//
-//  When run with no arguments, something like this will show:
-//
-//  ./waf --run "laa-wifi-simple"
-//
-//
-//
-//
 //Running simulation for 1 sec of data transfer; 5 sec overall
 //Operator A: LAA; number of cells 1; number of UEs 1
 //Operator B: Wi-Fi; number of cells 1; number of UEs 1
@@ -269,6 +49,19 @@ using namespace ns3;
 
 NS_LOG_COMPONENT_DEFINE ("LaaWifiCoexistenceSimple");
 
+static ns3::GlobalValue g_laaDeferX("laaDeferX",
+                                        "x of LAA's defer time",
+                                        ns3::IntegerValue(3),
+                                        ns3::MakeIntegerChecker<int>());
+static ns3::GlobalValue g_laaMinCw("laaMinCw",
+                                        "LAA's min cw",
+                                        ns3::IntegerValue(15),
+                                        ns3::MakeIntegerChecker<int>());
+static ns3::GlobalValue g_laaMaxM("laaMaxM",
+                                        "LAA's max value of M",
+                                        ns3::IntegerValue(6),
+                                        ns3::MakeIntegerChecker<int>());
+
 // Global Values are used in place of command line arguments so that these
 // values may be managed in the ns-3 ConfigStore system.
 static ns3::GlobalValue g_d1 ("d1",
@@ -309,7 +102,7 @@ static ns3::GlobalValue g_channelAccessManager ("ChannelAccessManager",
 static ns3::GlobalValue g_lbtTxop ("lbtTxop",
                                    "TxOp for LBT devices (ms)",
                                    ns3::DoubleValue (8.0),
-                                   ns3::MakeDoubleChecker<double> (4.0, 20.0));
+                                   ns3::MakeDoubleChecker<double> (0.0, 20.0));
 
 static ns3::GlobalValue g_useReservationSignal ("useReservationSignal",
                                                 "Defines whether reservation signal will be used when used channel access manager at LTE eNb",
@@ -405,6 +198,7 @@ main (int argc, char *argv[])
   EnumValue enumValue;
   BooleanValue booleanValue;
   StringValue stringValue;
+  IntegerValue integerValue;
 
   GlobalValue::GetValueByName ("d1", doubleValue);
   double d1 = doubleValue.Get ();
@@ -439,6 +233,12 @@ main (int argc, char *argv[])
   GlobalValue::GetValueByName ("indoorLossModel", stringValue);
   std::string indoorLossModel = stringValue.Get ();
 
+  GlobalValue::GetValueByName("laaDeferX",integerValue);
+  int laaDeferX=integerValue.Get();
+  GlobalValue::GetValueByName ("laaMinCw",integerValue);
+  int laaMinCw = integerValue.Get();
+  GlobalValue::GetValueByName ("laaMaxM",integerValue);
+  int laaMaxM = integerValue.Get();
   Config::SetDefault ("ns3::ChannelAccessManager::EnergyDetectionThreshold", DoubleValue (laaEdThreshold));
   switch (channelAccessManager)
     {
@@ -447,6 +247,12 @@ main (int argc, char *argv[])
       Config::SetDefault ("ns3::LbtAccessManager::Txop", TimeValue (Seconds (lbtTxop/1000.0)));
       Config::SetDefault ("ns3::LbtAccessManager::UseReservationSignal", BooleanValue(useReservationSignal));
       Config::SetDefault ("ns3::LbtAccessManager::CwUpdateRule", EnumValue(cwUpdateRule));
+
+      std::cout<<"lbt defer time is "<<(16.0+9.0*laaDeferX)<<"us"<<std::endl<<"lbt mincw is "<<laaMinCw<<std::endl<<"lbt maxcw is "<<(laaMinCw+1)*(1<<laaMaxM)<<std::endl;
+      Config::SetDefault ("ns3::LbtAccessManager::DeferTime",TimeValue(Seconds ((16.0+9.0*laaDeferX)/1000000.0)));
+      Config::SetDefault ("ns3::LbtAccessManager::MinCw",UintegerValue(static_cast<uint32_t>(laaMinCw)));
+      Config::SetDefault ("ns3::LbtAccessManager::MaxCw",UintegerValue(static_cast<uint32_t>(laaMinCw*(1<<laaMaxM))));
+
       break;
     case DutyCycle:
       Config::SetDefault ("ns3::LaaWifiCoexistenceHelper::ChannelAccessManagerType", StringValue ("ns3::DutyCycleAccessManager"));

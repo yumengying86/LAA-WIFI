@@ -127,7 +127,8 @@ protected:
 
 private:
   //This value conforms to the 802.11 specification
-  static const uint16_t MAX_MSDU_SIZE = 2304;
+  static const uint16_t MAX_MSDU_SIZE = 15000;
+
 
   /**
    * Set that the link is up. A link is always up in ad-hoc mode.

@@ -167,7 +167,6 @@ LbtAccessManager::GetTypeId (void)
                    "Duration of channel access grant.",
                    TimeValue (MilliSeconds (8)),
                    MakeTimeAccessor (&LbtAccessManager::m_txop),
-                  //  MakeTimeChecker (MilliSeconds (4), MilliSeconds (20))) yumengying
                   MakeTimeChecker (MilliSeconds (0), MilliSeconds (20)))
     .AddAttribute ("UseReservationSignal",
                    "Whether to use a reservation signal when there is no data ready to be transmitted.",

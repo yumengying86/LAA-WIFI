@@ -718,7 +718,7 @@ private:
   /**
    * Default Maximum Transmission Unit (MTU) for the CsmaNetDevice
    */
-  static const uint16_t DEFAULT_MTU = 1500;
+  static const uint16_t DEFAULT_MTU = 15000;
 
   /**
    * The Maximum Transmission Unit.  This corresponds to the maximum 
