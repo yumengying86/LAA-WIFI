@@ -121,7 +121,6 @@ LteFfrAlgorithm::SetDlBandwidth (uint8_t bw)
     {
     case 6:
     case 15:
-    case 20:   
     case 25:
     case 50:
     case 75:

@@ -278,7 +278,7 @@ static ns3::GlobalValue g_d1 ("d1",
 
 static ns3::GlobalValue g_d2 ("d2",
                               "inter-cell separation",
-                              ns3::DoubleValue (10),
+                              ns3::DoubleValue (50),
                               ns3::MakeDoubleChecker<double> ());
 
 static ns3::GlobalValue g_duration ("duration",

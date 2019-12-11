@@ -1,33 +1,36 @@
 #! /bin/bash
-# rm laa_wifi_simple_default_* Dl* Ul*
+
 # --shutA=true --udpRate=30000000 --udpPacketSize=9000 --shutB=true   --lbtTxop=1
 
-./waf --run "scratch/test --udpPacketSize=4500 --lbtTxop=3 --duration=5 --shutB=true --logPhyArrivals=true" 
-mv laa_wifi_simple_default_phy_log lte${int}_.txt
-rm laa_wifi_simple_default_* Dl* Ul*
+# only lte
+./waf --run "scratch/test --shutB=true --cellConfigA=Lte --logPhyArrivals=true" 
+mv laa_wifi_simple_default_phy_log lte.txt
 
-./waf --run "scratch/test --udpPacketSize=4500 --lbtTxop=3 --duration=5 --shutA=true --logPhyArrivals=true" 
-mv laa_wifi_simple_default_phy_log wifi${int}_.txt
-rm laa_wifi_simple_default_* Dl* Ul*
+# only laa
+./waf --run "scratch/test  --shutB=true --logPhyArrivals=true" 
+mv laa_wifi_simple_default_phy_log laa.txt
 
-int=1
-while(( $int<=8 ))
-do
-    ./waf --run "scratch/test --udpPacketSize=4500 --lbtTxop=${int} --duration=5 --logPhyArrivals=true"  
-    mv laa_wifi_simple_default_phy_log ltetxop${int}_.txt
-    rm laa_wifi_simple_default_* Dl* Ul*
-    let "int++"
-done
+# only wifi
+./waf --run "scratch/test --shutA=true --logPhyArrivals=true" 
+mv laa_wifi_simple_default_phy_log wifi.txt
 
 int=1
 while(( $int<=8 ))
 do
-    size=`expr $int \* 1500`
-    ./waf --run "scratch/test --udpPacketSize=${size} --lbtTxop=3 --duration=5 --logPhyArrivals=true"  
-    mv laa_wifi_simple_default_phy_log wifitxop${int}_.txt
-    rm laa_wifi_simple_default_* Dl* Ul*
+    ./waf --run "scratch/test --lbtTxop=${int} --logPhyArrivals=true"  
+    mv laa_wifi_simple_default_phy_log laatxop${int}.txt
     let "int++"
 done
+
+# int=1
+# while(( $int<=8 ))
+# do
+#     size=`expr $int \* 1500`
+#     ./waf --run "scratch/test --udpPacketSize=${size} --logPhyArrivals=true"  
+#     mv laa_wifi_simple_default_phy_log wifitxop${int}.txt
+#     rm laa_wifi_simple_default_* Dl* Ul*
+#     let "int++"
+# done
 
 # for i in 10000 15000 20000 250000
 # do	
