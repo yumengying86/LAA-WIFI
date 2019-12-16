@@ -2030,8 +2030,10 @@ ConfigureWifiAp (NodeContainer bsNodes, struct PhyParams phyParams, Ptr<Spectrum
   spectrumPhy.Set ("TxPowerStart", DoubleValue (phyParams.m_bsTxPower));
   spectrumPhy.Set ("TxPowerEnd", DoubleValue (phyParams.m_bsTxPower));
   spectrumPhy.Set ("RxNoiseFigure", DoubleValue (phyParams.m_bsNoiseFigure));
-  spectrumPhy.Set ("Receivers", UintegerValue (2));
-  spectrumPhy.Set ("Transmitters", UintegerValue (2));
+  // spectrumPhy.Set ("Receivers", UintegerValue (2));
+  // spectrumPhy.Set ("Transmitters", UintegerValue (2));
+  spectrumPhy.Set ("Receivers", UintegerValue (1));
+  spectrumPhy.Set ("Transmitters", UintegerValue (1));
   spectrumPhy.SetPcapDataLinkType (SpectrumWifiPhyHelper::DLT_IEEE802_11_RADIO);
 
   WifiHelper wifi;
@@ -2091,7 +2093,8 @@ ConfigureWifiSta (NodeContainer ueNodes, struct PhyParams phyParams, Ptr<Spectru
   spectrumPhy.Set ("TxPowerStart", DoubleValue (phyParams.m_ueTxPower));
   spectrumPhy.Set ("TxPowerEnd", DoubleValue (phyParams.m_ueTxPower));
   spectrumPhy.Set ("RxNoiseFigure", DoubleValue (phyParams.m_ueNoiseFigure));
-  spectrumPhy.Set ("Receivers", UintegerValue (2));
+  // spectrumPhy.Set ("Receivers", UintegerValue (2));
+  spectrumPhy.Set ("Receivers", UintegerValue (1));
   spectrumPhy.Set ("Transmitters", UintegerValue (1));
   spectrumPhy.SetPcapDataLinkType (SpectrumWifiPhyHelper::DLT_IEEE802_11_RADIO);
 

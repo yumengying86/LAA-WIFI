@@ -123,8 +123,8 @@ LaaWifiCoexistenceHelper::ConfigureEnbDevicesForLbt (NetDeviceContainer enbDevic
       spectrumPhy.Set ("TxPowerStart", DoubleValue (phyParams.m_bsTxPower));
       spectrumPhy.Set ("TxPowerEnd", DoubleValue (phyParams.m_bsTxPower));
       spectrumPhy.Set ("RxNoiseFigure", DoubleValue (phyParams.m_bsNoiseFigure));
-      spectrumPhy.Set ("Receivers", UintegerValue (2));
-      spectrumPhy.Set ("Transmitters", UintegerValue (2));
+      spectrumPhy.Set ("Receivers", UintegerValue (1));
+      spectrumPhy.Set ("Transmitters", UintegerValue (1));
 
       wifi.SetRemoteStationManager ("ns3::IdealWifiManager");
       //which implements a Wi-Fi MAC that does not perform any kind of beacon generation, probing, or association

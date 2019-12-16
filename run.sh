@@ -1,40 +1,33 @@
 #! /bin/bash
 
-# --shutA=true --udpRate=30000000 --udpPacketSize=9000 --shutB=true   --lbtTxop=1
+# --shutA=true --udpRate=30000000 --udpPacketSize=9000 --cellConfigA=Lte --shutB=true   --lbtTxop=1
 
-# only lte
-./waf --run "scratch/test --shutB=true --cellConfigA=Lte --logPhyArrivals=true" 
-mv laa_wifi_simple_default_phy_log lte.txt
+# test
+# sed -i "446c       dcf->SetTxopLimit (MicroSeconds (0));"  src/wifi/model/wifi-mac.cc
+# ./waf --run "scratch/test --logPhyArrivals=true"
 
-# only laa
-./waf --run "scratch/test  --shutB=true --logPhyArrivals=true" 
-mv laa_wifi_simple_default_phy_log laa.txt
+# # only lte
+# ./waf --run "scratch/test --shutB=true --cellConfigA=Lte --d2=500 --logPhyArrivals=true" 
 
-# only wifi
-./waf --run "scratch/test --shutA=true --logPhyArrivals=true" 
-mv laa_wifi_simple_default_phy_log wifi.txt
+# # only laa and wifi, no impact 8
+# sed -i "446c       dcf->SetTxopLimit (MicroSeconds (0));"  src/wifi/model/wifi-mac.cc
+# ./waf --run "scratch/test --d2=500 --logPhyArrivals=true" 
 
-int=1
-while(( $int<=8 ))
-do
-    ./waf --run "scratch/test --lbtTxop=${int} --logPhyArrivals=true"  
-    mv laa_wifi_simple_default_phy_log laatxop${int}.txt
-    let "int++"
-done
+# # only laa and wifi, no impact 3
+# sed -i "446c       dcf->SetTxopLimit (MicroSeconds (3008));"  src/wifi/model/wifi-mac.cc
+# ./waf --run "scratch/test --d2=500 --lbtTxop=3 --logPhyArrivals=true" 
 
 # int=1
 # while(( $int<=8 ))
 # do
-#     size=`expr $int \* 1500`
-#     ./waf --run "scratch/test --udpPacketSize=${size} --logPhyArrivals=true"  
-#     mv laa_wifi_simple_default_phy_log wifitxop${int}.txt
-#     rm laa_wifi_simple_default_* Dl* Ul*
+#     ./waf --run "scratch/test --lbtTxop=${int} --logPhyArrivals=true"  
+#     mv laa_wifi_simple_default_phy_log laatxop${int}.txt
 #     let "int++"
 # done
 
-# for i in 10000 15000 20000 250000
+# for int in 992 2016 3008 4000 4992 6016 7008 8000
 # do	
-# 	echo $i
-# 	sed -i "2429c double interval = static_cast<double> (packetSize * 8) / (bitRate*${i});"  ./src/laa-wifi-coexistence/helper/scenario-helper.cc
-# 	./waf --run "test --logPhyArrivals=true"
+# 	sed -i "446c       dcf->SetTxopLimit (MicroSeconds (${int}));"  src/wifi/model/wifi-mac.cc
+# 	./waf --run "scratch/test --lbtTxop=3 --logPhyArrivals=true"
+#     mv laa_wifi_simple_default_phy_log wifitxop${int}.txt
 # done	

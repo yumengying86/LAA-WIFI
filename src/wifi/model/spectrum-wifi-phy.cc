@@ -986,6 +986,7 @@ SpectrumWifiPhy::SendPacket (Ptr<const Packet> packet, WifiTxVector txVector, Wi
   else
     {
       dataRate500KbpsUnits = txVector.GetMode ().GetDataRate (txVector.GetChannelWidth (), txVector.IsShortGuardInterval (), 1) * txVector.GetNss () / 500000;
+
     }
   if (mpdutype == MPDU_IN_AGGREGATE && preamble != WIFI_PREAMBLE_NONE)
     {
