@@ -1754,6 +1754,7 @@ CqaFfMacScheduler::DoSchedDlTriggerReq (const struct FfMacSchedSapProvider::Sche
       NS_LOG_INFO (this << " UE average throughput " << (*itStats).second.lastAveragedThroughput);
       (*itStats).second.lastTtiBytesTransmitted = 0;
     }
+
   m_schedSapUser->SchedDlConfigInd (ret);
 
   int count_allocated_resource_blocks = 0;

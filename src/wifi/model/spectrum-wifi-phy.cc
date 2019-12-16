@@ -967,7 +967,7 @@ SpectrumWifiPhy::SendPacket (Ptr<const Packet> packet, WifiTxVector txVector, Wi
       NotifyTxDrop (packet);
       return;
     }
-  // std::cout << "wifi packet size: " << packet->GetSize () << std::endl;
+
   Time txDuration = CalculateTxDuration (packet->GetSize (), txVector, preamble, GetFrequency (), mpdutype, 1);
   NS_ASSERT (txDuration > NanoSeconds (0));
 
@@ -986,6 +986,7 @@ SpectrumWifiPhy::SendPacket (Ptr<const Packet> packet, WifiTxVector txVector, Wi
   else
     {
       dataRate500KbpsUnits = txVector.GetMode ().GetDataRate (txVector.GetChannelWidth (), txVector.IsShortGuardInterval (), 1) * txVector.GetNss () / 500000;
+
     }
   if (mpdutype == MPDU_IN_AGGREGATE && preamble != WIFI_PREAMBLE_NONE)
     {

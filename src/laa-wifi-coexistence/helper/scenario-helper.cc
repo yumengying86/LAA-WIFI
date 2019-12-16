@@ -1771,7 +1771,7 @@ SaveAssociationStats(std::string filename, const std::vector<AssociationEvent> &
 void
 ConfigureLte (Ptr<LteHelper> lteHelper, Ptr<PointToPointEpcHelper> epcHelper, Ipv4AddressHelper& internetIpv4Helper, NodeContainer bsNodes, NodeContainer ueNodes, NodeContainer clientNodes, NetDeviceContainer& bsDevices, NetDeviceContainer& ueDevices, struct PhyParams phyParams, std::vector<LteSpectrumValueCatcher>& lteDlSinrCatcherVector, std::bitset<40> absPattern, Transport_e transport)
 {
-  Config::SetDefault ("ns3::LteRlcUm::MaxTxBufferSize", UintegerValue (2000000));
+  Config::SetDefault ("ns3::LteRlcUm::MaxTxBufferSize", UintegerValue (0xffffffff));
 
   // For LTE, the client node needs to be connected only to the PGW/SGW node
   // The EpcHelper will then take care of connecting the PGW/SGW node to the eNBs
@@ -1916,7 +1916,8 @@ ConfigureLaa (Ptr<LteHelper> lteHelper, Ptr<PointToPointEpcHelper> epcHelper, Ip
   lteHelper->SetSchedulerAttribute ("UlCqiFilter", EnumValue (FfMacScheduler::PUSCH_UL_CQI));
   // LTE-U DL transmission @5180 MHz
   lteHelper->SetEnbDeviceAttribute ("DlEarfcn", UintegerValue (255444));
-  lteHelper->SetEnbDeviceAttribute ("DlBandwidth", UintegerValue (20));             
+  // bandwidth in RBs, 20Mhz -> 100RBs
+  lteHelper->SetEnbDeviceAttribute ("DlBandwidth", UintegerValue (100));             
   // needed for initial cell search
   lteHelper->SetUeDeviceAttribute ("DlEarfcn", UintegerValue (255444));
   // LTE calibration
@@ -2029,15 +2030,17 @@ ConfigureWifiAp (NodeContainer bsNodes, struct PhyParams phyParams, Ptr<Spectrum
   spectrumPhy.Set ("TxPowerStart", DoubleValue (phyParams.m_bsTxPower));
   spectrumPhy.Set ("TxPowerEnd", DoubleValue (phyParams.m_bsTxPower));
   spectrumPhy.Set ("RxNoiseFigure", DoubleValue (phyParams.m_bsNoiseFigure));
-  spectrumPhy.Set ("Receivers", UintegerValue (2));
-  spectrumPhy.Set ("Transmitters", UintegerValue (2));
+  // spectrumPhy.Set ("Receivers", UintegerValue (2));
+  // spectrumPhy.Set ("Transmitters", UintegerValue (2));
+  spectrumPhy.Set ("Receivers", UintegerValue (1));
+  spectrumPhy.Set ("Transmitters", UintegerValue (1));
   spectrumPhy.SetPcapDataLinkType (SpectrumWifiPhyHelper::DLT_IEEE802_11_RADIO);
 
   WifiHelper wifi;
   wifi.SetRemoteStationManager ("ns3::IdealWifiManager");
   wifi.SetStandard (WIFI_PHY_STANDARD_80211n_5GHZ);
-  wifi.SetRemoteStationManager ("ns3::ConstantRateWifiManager",
-                                "DataMode", StringValue ("OfdmRate12Mbps"));
+  // wifi.SetRemoteStationManager ("ns3::ConstantRateWifiManager",
+  //                              "DataMode", StringValue ("OfdmRate12Mbps"));
   WifiMacHelper mac;
 
   spectrumPhy.Set ("ShortGuardEnabled", BooleanValue (false));
@@ -2090,15 +2093,16 @@ ConfigureWifiSta (NodeContainer ueNodes, struct PhyParams phyParams, Ptr<Spectru
   spectrumPhy.Set ("TxPowerStart", DoubleValue (phyParams.m_ueTxPower));
   spectrumPhy.Set ("TxPowerEnd", DoubleValue (phyParams.m_ueTxPower));
   spectrumPhy.Set ("RxNoiseFigure", DoubleValue (phyParams.m_ueNoiseFigure));
-  spectrumPhy.Set ("Receivers", UintegerValue (2));
+  // spectrumPhy.Set ("Receivers", UintegerValue (2));
+  spectrumPhy.Set ("Receivers", UintegerValue (1));
   spectrumPhy.Set ("Transmitters", UintegerValue (1));
   spectrumPhy.SetPcapDataLinkType (SpectrumWifiPhyHelper::DLT_IEEE802_11_RADIO);
 
   WifiHelper wifi;
   wifi.SetRemoteStationManager ("ns3::IdealWifiManager");
   wifi.SetStandard (WIFI_PHY_STANDARD_80211n_5GHZ);
-  wifi.SetRemoteStationManager ("ns3::ConstantRateWifiManager",
-                                "DataMode", StringValue ("OfdmRate12Mbps")); 
+  // wifi.SetRemoteStationManager ("ns3::ConstantRateWifiManager",
+  //                               "DataMode", StringValue ("OfdmRate12Mbps")); 
   WifiMacHelper mac;
 
   spectrumPhy.Set ("ShortGuardEnabled", BooleanValue (false));
@@ -3053,7 +3057,7 @@ ConfigureAndRunScenario (Config_e cellConfigA,
 
 
   // these slow down simulations, only enable them if you need them
-  lteHelper->EnableTraces();
+  //lteHelper->EnableTraces();
 
   Ptr<RadioEnvironmentMapHelper> remHelper;
   if (generateRem)
