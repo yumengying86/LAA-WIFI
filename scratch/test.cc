@@ -49,6 +49,14 @@ using namespace ns3;
 
 NS_LOG_COMPONENT_DEFINE ("LaaWifiCoexistenceSimple");
 
+static ns3::GlobalValue g_numA("numA",
+                                  "the number of cell A",
+                                  ns3::IntegerValue(3),
+                                  ns3::MakeIntegerChecker<int>());
+static ns3::GlobalValue g_numB("numB",
+                                  "the number of cell B",
+                                  ns3::IntegerValue(3),
+                                  ns3::MakeIntegerChecker<int>());
 static ns3::GlobalValue g_laaDeferX("laaDeferX",
                                         "x of LAA's defer time",
                                         ns3::IntegerValue(3),
@@ -233,6 +241,10 @@ main (int argc, char *argv[])
   GlobalValue::GetValueByName ("indoorLossModel", stringValue);
   std::string indoorLossModel = stringValue.Get ();
 
+  GlobalValue::GetValueByName ("numA",integerValue);
+  int numA = integerValue.Get();
+  GlobalValue::GetValueByName ("numB",integerValue);
+  int numB = integerValue.Get();
   GlobalValue::GetValueByName("laaDeferX",integerValue);
   int laaDeferX=integerValue.Get();
   GlobalValue::GetValueByName ("laaMinCw",integerValue);
@@ -275,17 +287,38 @@ main (int argc, char *argv[])
   NodeContainer ueNodesA, ueNodesB;  // for STAs and UEs
   NodeContainer allWirelessNodes;  // container to hold all wireless nodes 
   // Each network A and B gets one type of node each
-  bsNodesA.Create (1);
-  bsNodesB.Create (1);
-  ueNodesA.Create (1);
-  ueNodesB.Create (1);
+  bsNodesA.Create (numA);
+  bsNodesB.Create (numB);
+  ueNodesA.Create (numA);
+  ueNodesB.Create (numB);
   allWirelessNodes = NodeContainer (bsNodesA, bsNodesB, ueNodesA, ueNodesB);
 
   Ptr<ListPositionAllocator> positionAlloc = CreateObject<ListPositionAllocator> ();
-  positionAlloc->Add (Vector (0.0, 0.0, 0.0));   // eNB1/AP in cell 0
-  positionAlloc->Add (Vector (d2, d1, 0.0)); // AP in cell 1
-  positionAlloc->Add (Vector (0.0, d1, 0.0));  // UE1/STA in cell 0
-  positionAlloc->Add (Vector (d2, 0.0, 0.0));  // STA in cell 1
+  double delta_x = 0.0;
+  for(int i = 0; i < numA; ++i) // eNB1/AP in cell 0
+  {
+    positionAlloc->Add (Vector (delta_x, 0.0, 0.0));
+    delta_x += 1; 
+  }
+  for(int i = 0; i < numB; ++i)  // AP in cell 1
+  {
+    positionAlloc->Add (Vector (d2 - delta_x, d1, 0.0));
+    delta_x -= 1; 
+  }
+  for(int i = 0; i < numA; ++i) // UE1/STA in cell 0
+  {
+    positionAlloc->Add (Vector (delta_x, d1, 0.0));
+      delta_x += 1;
+  }
+  for(int i = 0; i < numB; ++i) // STA in cell 1
+  {
+    positionAlloc->Add (Vector (d2 - delta_x, 0, 0.0));
+      delta_x -= 1;
+  }
+  // positionAlloc->Add (Vector (0.0, 0.0, 0.0));   // eNB1/AP in cell 0
+  // positionAlloc->Add (Vector (d2, d1, 0.0)); // AP in cell 1
+  // positionAlloc->Add (Vector (0.0, d1, 0.0));  // UE1/STA in cell 0
+  // positionAlloc->Add (Vector (d2, 0.0, 0.0));  // STA in cell 1
   MobilityHelper mobility;
   mobility.SetMobilityModel ("ns3::ConstantPositionMobilityModel");
   mobility.SetPositionAllocator (positionAlloc);

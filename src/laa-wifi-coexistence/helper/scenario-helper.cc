@@ -71,6 +71,10 @@ static ns3::GlobalValue g_shutB("shutB",
                                 "shut down B ?",
                                 ns3::BooleanValue (false),
                                 ns3::MakeBooleanChecker ());
+static ns3::GlobalValue g_monitorStartTimeSeconds("monitorStartTimeSeconds",
+                                "Monitor start time (seconds)",
+                                ns3::DoubleValue (0),
+                                ns3::MakeDoubleChecker<double> ());
 
 static ns3::GlobalValue g_serverStartTimeSeconds ("serverStartTimeSeconds",
                                                   "Server start time (seconds)",
@@ -2443,9 +2447,9 @@ ConfigureAndRunScenario (Config_e cellConfigA,
   UintegerValue uintegerValue;
   GlobalValue::GetValueByName ("udpPacketSize", uintegerValue);
   uint64_t bitRate = dataRateValue.Get().GetBitRate ();
-  // uint32_t packetSize = uintegerValue.Get (); // bytes
-  // double interval = static_cast<double> (packetSize * 8) / bitRate;
-  double interval = static_cast<double> (0.000001);
+  uint32_t packetSize = uintegerValue.Get (); // bytes
+  double interval = static_cast<double> (packetSize * 8) / bitRate;
+  // double interval = static_cast<double> (0.000001);
  
   Time udpInterval;
   // if bitRate < UDP_SATURATION_RATE, use the calculated interval 
@@ -3049,12 +3053,15 @@ ConfigureAndRunScenario (Config_e cellConfigA,
   monitorA->SetAttribute ("DelayBinWidth", DoubleValue (0.001));
   monitorA->SetAttribute ("JitterBinWidth", DoubleValue (0.001));
   monitorA->SetAttribute ("PacketSizeBinWidth", DoubleValue (20));
+  // GlobalValue::GetValueByName ("monitorStartTimeSeconds", doubleValue);
+  // Time monitorStartTime = Seconds (doubleValue.Get ());
+  // monitorA->SetAttribute("StartTime", TimeValue(Seconds(monitorStartTime)));
 
   Ptr<FlowMonitor> monitorB = flowmonHelperB.Install (endpointNodesB);
   monitorB->SetAttribute ("DelayBinWidth", DoubleValue (0.001));
   monitorB->SetAttribute ("JitterBinWidth", DoubleValue (0.001));
   monitorB->SetAttribute ("PacketSizeBinWidth", DoubleValue (20));
-
+  // monitorB->SetAttribute("StartTime", TimeValue(Seconds(monitorStartTime)));
 
   // these slow down simulations, only enable them if you need them
   //lteHelper->EnableTraces();
