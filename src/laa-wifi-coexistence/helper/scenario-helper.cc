@@ -2447,9 +2447,9 @@ ConfigureAndRunScenario (Config_e cellConfigA,
   UintegerValue uintegerValue;
   GlobalValue::GetValueByName ("udpPacketSize", uintegerValue);
   uint64_t bitRate = dataRateValue.Get().GetBitRate ();
-  uint32_t packetSize = uintegerValue.Get (); // bytes
-  double interval = static_cast<double> (packetSize * 8) / bitRate;
-  // double interval = static_cast<double> (0.000001);
+  // uint32_t packetSize = uintegerValue.Get (); // bytes
+  // double interval = static_cast<double> (packetSize * 8) / bitRate;
+  double interval = static_cast<double> (0.00001);
  
   Time udpInterval;
   // if bitRate < UDP_SATURATION_RATE, use the calculated interval 
